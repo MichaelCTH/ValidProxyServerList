@@ -14,9 +14,9 @@ class ProxyserverspiderPipeline(object):
 
 class ProxyserverValidatePipeline(object):
     def process_item(self, item, spider):
-        IP = {item['ReqType']:item['IP']}
+        proxy = {item['ReqType'].lower():'http://'+item['IP']+':'+item['PORT']}
         try:
-            r = requests.get('http://www.google.ca',proxies=IP, timeout=3)
+            r = requests.get(item['target'],proxies=proxy, timeout=3)
             if r.status_code == 200:
                 #update new measured delay
                 item['Delay'] = r.elapsed.total_seconds()
